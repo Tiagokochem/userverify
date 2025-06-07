@@ -159,9 +159,19 @@ Acesse o dashboard do Horizon em: `http://localhost/horizon`
 
 A documentação completa da API está disponível em:
 `http://localhost/api/documentation`
+![relatorio pdf](https://github.com/user-attachments/assets/a2e0c26c-871e-4af1-b321-458758825559)
+![docuser](https://github.com/user-attachments/assets/c57687f0-830b-45e4-8eda-073fa980f3ad)
+![docuser2](https://github.com/user-attachments/assets/715f3b55-3b7e-44be-9aec-3c570cbd0e5e)
+![docuser3](https://github.com/user-attachments/assets/5ce29bbd-9dc1-491d-9924-3349a980a587)
+![testes1](https://github.com/user-attachments/assets/02ebc7d5-1bf5-4562-8c71-44eefcc2bc07)
+![horizon2](https://github.com/user-attachments/assets/16d9762a-5fd4-4096-9ce6-698c2112949e)
+![horizon](https://github.com/user-attachments/assets/6e3acdbd-870e-44b4-b6c2-6b56a35bef18)
 
-## 👨‍💻 Autor
 
-[Seu Nome]
-- 📧 [seu-email@exemplo.com]
-- 🔗 [LinkedIn](https://linkedin.com/in/seu-perfil) | [GitHub](https://github.com/seu-usuario) 
+
+## 👨‍💻 Autor![Uploading testes1.png…]()
+
+
+[Tiago Kochem]
+- 📧 [tiagok989@gmail.com]
+- 🔗 [LinkedIn](https://linkedin.com/in/tiagokochem) | [GitHub](https://github.com/tiagokochem) 
