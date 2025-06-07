@@ -7,10 +7,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class AnalyzeUserJob implements ShouldQueue
 {
-    use Queueable;
+    use Dispatchable, Queueable, SerializesModels;
 
     public function __construct(protected UserRecord $record) {}
 
@@ -37,6 +39,12 @@ class AnalyzeUserJob implements ShouldQueue
 
         $filename = "user_report_{$this->record->cpf}.pdf";
         $path     = storage_path("app/reports/{$filename}");
+        
+        // Cria o diretório se não existir
+        if (!file_exists(storage_path('app/reports'))) {
+            mkdir(storage_path('app/reports'), 0755, true);
+        }
+        
         $pdf->save($path);
 
         // simula envio de email (log)
