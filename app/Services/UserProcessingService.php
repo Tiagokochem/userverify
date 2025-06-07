@@ -58,4 +58,29 @@ class UserProcessingService
             'status' => 200,
         ];
     }
+
+    public function find(string $cpf): array
+    {
+        $cacheKey = "user:cpf:$cpf";
+        
+        if (Cache::tags(['users'])->has($cacheKey)) {
+            return [
+                'data' => ['status' => 'ok', 'data' => Cache::tags(['users'])->get($cacheKey)],
+                'status' => 200
+            ];
+        }
+
+        $record = UserRecord::where('cpf', $cpf)->first();
+        if (!$record) {
+            return [
+                'data' => ['status' => 'not_found'],
+                'status' => 404
+            ];
+        }
+
+        return [
+            'data' => ['status' => 'ok', 'data' => json_decode($record->external_data, true)],
+            'status' => 200
+        ];
+    }
 }
