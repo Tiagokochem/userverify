@@ -1,61 +1,167 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# User Processor API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API RESTful para processamento de dados de usuários com validação, cache, integração com serviços externos e processamento assíncrono.
 
-## About Laravel
+## 🚀 Tecnologias Utilizadas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel 12.x
+- PHP 8.4
+- MySQL
+- Redis
+- Laravel Sail (Docker)
+- Laravel Horizon
+- Laravel DomPDF
+- L5-Swagger (OpenAPI)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✅ Funcionalidades Implementadas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Endpoints RESTful
+- `POST /api/v1/users/process` - Processa dados de usuário (CPF, CEP, e-mail)
+- `GET /api/v1/users/{cpf}` - Consulta dados do usuário
 
-## Learning Laravel
+### Validação e Cache
+- Validação robusta via Form Request
+- Cache Redis com tags e TTL de 24h
+- Tratamento estruturado de erros (HTTP 422)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Integração com APIs Externas
+- ViaCEP (endereços)
+- Nationalize (dados demográficos)
+- Mock de status de CPF
+- Retry automático (3 tentativas com backoff)
+- Timeouts configuráveis
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Observabilidade
+- Middleware de logging com correlation_id
+- Logs estruturados em JSON
+- Monitoramento de chamadas externas e cache
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Persistência e Processamento
+- Repository Pattern + Eloquent
+- Migrations com constraints
+- Processamento assíncrono via filas
+- Análise de risco e geração de relatórios PDF
+- Simulação de envio de e-mails
 
-## Laravel Sponsors
+### Monitoramento
+- Laravel Horizon para filas
+- Métricas e balanceamento
+- Supervisores configurados
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Documentação
+- OpenAPI/Swagger
+- UI disponível em `/api/documentation`
 
-### Premium Partners
+## 🔧 Como Rodar o Projeto
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. Clone o repositório
+```bash
+git clone [URL_DO_REPOSITÓRIO]
+cd [NOME_DO_PROJETO]
+```
 
-## Contributing
+2. Instale as dependências com Composer (usando Docker)
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php84-composer:latest \
+    composer install --ignore-platform-reqs
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Configure o ambiente
+```bash
+cp .env.example .env
+```
 
-## Code of Conduct
+4. Inicie os containers
+```bash
+./vendor/bin/sail up -d
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. Execute as migrations e seeds
+```bash
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan db:seed
+```
 
-## Security Vulnerabilities
+6. Inicie o Horizon para monitoramento de filas
+```bash
+./vendor/bin/sail artisan horizon
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🧪 Testes
 
-## License
+O projeto inclui testes unitários e de feature:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+./vendor/bin/sail artisan test
+```
+
+Testes implementados:
+- ExternalApiServiceTest (Unit)
+- UserProcessTest (Feature)
+- Cobertura de validação, cache e fluxo completo
+
+## 📁 Estrutura do Projeto
+
+```
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── Api/
+│   │   │       └── UserProcessController.php
+│   │   └── Requests/
+│   │       └── ProcessUserRequest.php
+│   ├── Jobs/
+│   │   └── AnalyzeUserJob.php
+│   ├── Models/
+│   │   └── UserRecord.php
+│   ├── Repositories/
+│   │   └── UserRepository.php
+│   └── Services/
+│       └── ExternalApiService.php
+├── config/
+│   ├── horizon.php
+│   └── cache.php
+├── database/
+│   └── migrations/
+├── storage/
+│   └── app/
+│       └── reports/
+└── tests/
+    ├── Unit/
+    │   └── ExternalApiServiceTest.php
+    └── Feature/
+        └── UserProcessTest.php
+```
+
+## 📝 Observações Importantes
+
+- Cache Redis configurado com TTL de 24h
+- Relatórios PDF são armazenados em `storage/app/reports`
+- Logs estruturados em JSON para melhor observabilidade
+- Timeouts e retries configurados para chamadas externas
+- Documentação OpenAPI disponível em `/api/documentation`
+
+## 🔍 Monitoramento
+
+Para monitorar as filas e jobs:
+
+```bash
+./vendor/bin/sail artisan horizon
+```
+
+Acesse o dashboard do Horizon em: `http://localhost/horizon`
+
+## 📚 Documentação da API
+
+A documentação completa da API está disponível em:
+`http://localhost/api/documentation`
+
+## 👨‍💻 Autor
+
+[Seu Nome]
+- 📧 [seu-email@exemplo.com]
+- 🔗 [LinkedIn](https://linkedin.com/in/seu-perfil) | [GitHub](https://github.com/seu-usuario) 
